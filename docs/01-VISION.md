@@ -26,7 +26,7 @@
 
 Hyperion exists to become the world's most trusted platform for explainable financial reasoning.
 
-We believe investors do not suffer from a lack of information—they suffer from a lack of understanding.
+We believe investors do not suffer from a lack of information, rather they suffer from a lack of understanding.
 
 Every day, investors consume prices, financial statements, news, earnings reports, analyst opinions, and economic indicators. Yet many investment decisions are still made without fully understanding the relationships that shape markets.
 
