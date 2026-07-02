@@ -1,0 +1,8 @@
+id,ticker,name,sector,industry,aliases
+apple-inc,AAPL,Apple Inc.,Technology,Consumer Electronics,apple;aapl
+microsoft,MSFT,Microsoft Corporation,Technology,Software,msft;microsoft
+nvidia,NVDA,NVIDIA Corporation,Technology,Semiconductors,nvda
+tsmc,TSM,Taiwan Semiconductor Manufacturing Company,Technology,Semiconductors,tsmc;taiwan semiconductor
+amazon,AMZN,Amazon.com Inc.,Consumer Discretionary,E-Commerce & Cloud Services,aws;amazon
+alphabet,GOOGL,Alphabet Inc.,Technology,Internet Services,google;googl;alphabet
+nestle,NESN,Nestle S.A.,Consumer Staples,Food & Beverages,nestle;nestle sa
