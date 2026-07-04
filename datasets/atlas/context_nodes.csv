@@ -1,0 +1,9 @@
+id,node_class,label
+taiwan,GEOGRAPHY,Taiwan
+geopolitical-risk-taiwan,MACRO_FACTOR,Taiwan Geopolitical Risk
+semiconductor-industry,INDUSTRY,Semiconductors
+software-industry,INDUSTRY,Software
+internet-services-industry,INDUSTRY,Internet Services
+ecommerce-cloud-industry,INDUSTRY,E-Commerce & Cloud Services
+consumer-electronics-industry,INDUSTRY,Consumer Electronics
+food-beverages-industry,INDUSTRY,Food & Beverages

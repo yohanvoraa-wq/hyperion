@@ -1,0 +1,12 @@
+source_id,target_id,relationship_type,directionality,temporality,cardinality,evidence_source,confidence,evidence
+apple-inc,tsmc,DEPENDS_ON_SUPPLIES,BIDIRECTIONAL,PERSISTENT,MANY_TO_MANY,DISCLOSED,0.95,Apple 10-K: TSMC identified as sole-source supplier for Apple Silicon and key chips
+nvidia,tsmc,DEPENDS_ON_SUPPLIES,BIDIRECTIONAL,PERSISTENT,MANY_TO_MANY,DISCLOSED,0.90,NVIDIA annual report: TSMC manufactures substantially all of NVIDIA GPU products
+tsmc,taiwan,LOCATED_IN,DIRECTED,PERSISTENT,ONE_TO_MANY,PUBLIC_RECORD,1.0,TSMC primary fabrication facilities located in Taiwan per official regulatory filings
+taiwan,geopolitical-risk-taiwan,AFFECTED_BY,DIRECTED,EVENT_DRIVEN,ONE_TO_MANY,PUBLIC_RECORD,0.85,Taiwan Strait geopolitical tensions documented by US DoD assessments and risk agencies
+apple-inc,semiconductor-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,0.90,Apple designs custom silicon (Apple Silicon M-series A-series); deep semiconductor exposure
+nvidia,semiconductor-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,NVIDIA Corporation is a semiconductor and software company per SEC filings
+tsmc,semiconductor-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,TSMC is the world's largest contract semiconductor manufacturer per public filings
+microsoft,software-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,Microsoft Corporation classified Technology/Software per SEC filings and GICS
+alphabet,internet-services-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,Alphabet Inc. classified Technology/Internet Services per SEC filings
+amazon,ecommerce-cloud-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,Amazon.com Inc. classified Consumer Discretionary/E-Commerce per SEC filings
+nestle,food-beverages-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,Nestle S.A. classified Consumer Staples/Food & Beverages per public filings
