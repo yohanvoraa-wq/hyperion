@@ -76,16 +76,31 @@ uv run python scripts/demo.py
 
 …that prints one Reasoning Chain and one qualified Blind Spot for a fixed three-company portfolio (Apple, NVIDIA, Microsoft), built entirely deterministically — no model, no API call. Per ED-009, that's the literal Definition of Done for the next phase of work. `scripts/demo.py` does not exist yet.
 
+## Status
+
+**Phase 1 complete. Phase 2 (Proof of Concept) complete.**
+
+The full pipeline runs end-to-end:
+
+```bash
+uv run python scripts/demo.py
+```
+
+See [CHANGELOG.md](CHANGELOG.md) for the complete v0.1.0-alpha release notes.
+
 ## Milestone roadmap
 
 ```
-Milestone 1 — Repository Bootstrap        ← you are here
-Milestone 2 — Shared Models (backend/models)
-Milestone 3 — Finance DNA V0 (4 dimensions, 1 company)
-Milestone 4 — Atlas V0 (1 graph: Apple → TSMC → Taiwan → Geopolitical Risk)
-Milestone 5 — Janus V0 (deterministic, no AI)
-Milestone 6 — Titan V0 (deterministic, no AI)
-Milestone 7 — Demo Pipeline (scripts/demo.py runs end to end)
+Milestone 1  ✅  Repository Bootstrap
+Milestone 2  ✅  Shared Models
+Milestone 3  ✅  Portfolio Ingestion
+Milestone 4  ✅  Finance DNA
+Milestone 5  ✅  Atlas Knowledge Graph
+Milestone 6  ✅  Janus Reasoning Engine
+Milestone 7  ✅  Titan Qualification Engine
+Milestone 8  ✅  End-to-End Demo Pipeline
+────────────────────────────────────────
+Milestone 9       Repository Polish (CI, Makefile, CONTRIBUTING)
+Milestone 10      FastAPI
+Milestone 11      Frontend
 ```
-
-Progress from here is measured by demonstrations, not commits or documents completed.
