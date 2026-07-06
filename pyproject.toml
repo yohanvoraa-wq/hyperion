@@ -28,6 +28,17 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
+
+[[tool.mypy.overrides]]
+module = [
+    "fastapi",
+    "fastapi.*",
+    "uvicorn",
+    "uvicorn.*",
+    "starlette",
+    "starlette.*",
+]
+ignore_missing_imports = true
 packages = ["backend"]
 
 [tool.pytest.ini_options]
