@@ -24,16 +24,19 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Install dependencies
-        run: uv sync --all-groups
+        run: |
+          uv sync --all-groups
+          echo "$PWD/.venv/bin" >> $GITHUB_PATH
+          echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
 
       - name: Lint — ruff
-        run: uv run ruff check backend/
+        run: ruff check backend/
 
       - name: Type check — mypy --strict
-        run: uv run mypy backend
+        run: mypy backend
 
       - name: Tests — pytest
-        run: uv run pytest -q
+        run: pytest -q
 
       - name: Verify demo script runs
-        run: uv run python scripts/demo.py
+        run: python scripts/demo.py
