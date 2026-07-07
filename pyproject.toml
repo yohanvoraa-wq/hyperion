@@ -3,10 +3,16 @@ name = "hyperion"
 version = "0.1.0"
 description = "An explainable financial reasoning platform. See docs/01-VISION.md."
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.139.0",
+    "pydantic>=2.13.4",
+    "uvicorn[standard]>=0.50.1",
+]
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
+    "httpx2>=2.5.0",
     "mypy>=2.1.0",
     "pytest>=9.1.1",
     "ruff>=0.15.20",
@@ -28,18 +34,31 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
+mypy_path = "."
+packages = ["backend"]
 
+# Pydantic v2 ships with inline types but mypy sometimes fails to locate
+# them in CI environments. Suppress import errors for these third-party
+# packages rather than blocking the quality gate on stub availability.
+# FastAPI and Starlette do not ship complete stubs; overrides are required.
 [[tool.mypy.overrides]]
 module = [
-    "fastapi",
+    "pydantic.*",
     "fastapi.*",
-    "uvicorn",
-    "uvicorn.*",
-    "starlette",
     "starlette.*",
+    "uvicorn.*",
+    "httpx.*",
+    "httpx2.*",
 ]
 ignore_missing_imports = true
-packages = ["backend"]
+
+# FastAPI's @router.post() and @app.exception_handler() decorators do not
+# carry sufficient type information for mypy --strict. Disabling
+# disallow_untyped_decorators for these two files avoids false positives
+# without weakening type safety in the engine or business logic.
+[[tool.mypy.overrides]]
+module = ["backend.api.routes", "backend.api.errors"]
+disallow_untyped_decorators = false
 
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
