@@ -60,6 +60,14 @@ ignore_missing_imports = true
 module = ["backend.api.routes", "backend.api.errors"]
 disallow_untyped_decorators = false
 
+[[tool.mypy.overrides]]
+module = [
+    "backend.ingestion.exceptions",
+    "backend.ingestion.loader",
+    "backend.ingestion.resolver",
+]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
 python_files = ["test_*.py"]
