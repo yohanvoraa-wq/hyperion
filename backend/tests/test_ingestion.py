@@ -236,12 +236,11 @@ class TestImmutability:
     def test_portfolio_is_immutable(self, registry: AssetRegistry) -> None:
         portfolio = resolve_portfolio(["Apple"], registry)
         with pytest.raises(FrozenInstanceError):
-            portfolio.name = "Hacked"  # type: ignore[misc]
-
+            portfolio.name = "Hacked"
     def test_assets_inside_portfolio_are_immutable(self, registry: AssetRegistry) -> None:
         portfolio = resolve_portfolio(["Apple"], registry)
         with pytest.raises(FrozenInstanceError):
-            portfolio.assets[0].name = "Hacked"  # type: ignore[misc]
+            portfolio.assets[0].name = "Hacked"
 
 
 # ---------------------------------------------------------------------------
