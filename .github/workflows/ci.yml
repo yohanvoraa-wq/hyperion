@@ -35,17 +35,8 @@ jobs:
       - name: Type check — mypy --strict
         run: mypy backend
 
-      - name: Diagnose Python environment
-        run: |
-          echo "PWD: $PWD"
-          echo "PYTHONPATH: $PYTHONPATH"
-          which python
-          python --version
-          python -c "import sys; print(sys.path)"
-          ls backend/ingestion/
-
       - name: Tests — pytest
-        run: pytest -q
+        run: python -m pytest -q
 
       - name: Verify demo script runs
         run: python scripts/demo.py
