@@ -31,15 +31,9 @@ jobs:
 
       - name: Type check — mypy --strict
         run: uv run mypy backend
-        env:
-          PYTHONPATH: ${{ github.workspace }}
 
       - name: Tests — pytest
         run: uv run pytest -q
-        env:
-          PYTHONPATH: ${{ github.workspace }}
 
       - name: Verify demo script runs
         run: uv run python scripts/demo.py
-        env:
-          PYTHONPATH: ${{ github.workspace }}
