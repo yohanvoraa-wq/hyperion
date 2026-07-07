@@ -10,8 +10,6 @@ jobs:
   quality:
     name: Quality Gate
     runs-on: ubuntu-latest
-    env:
-      PYTHONPATH: ${{ github.workspace }}
 
     steps:
       - name: Checkout repository
@@ -26,7 +24,7 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --all-groups
 
       - name: Lint — ruff
         run: uv run ruff check backend/
