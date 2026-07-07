@@ -18,11 +18,6 @@ dev = [
     "ruff>=0.15.20",
 ]
 
-# --- ED-004: Engineering Principles -----------------------------------------
-# Formatting and linting are enforced by ruff (ED-001's formatter+linter choice).
-# Typing is enforced by mypy in strict mode, since module boundaries (ED-005)
-# are partly encoded as distinct, non-interchangeable types in backend/models/.
-
 [tool.ruff]
 line-length = 100
 target-version = "py312"
@@ -37,10 +32,6 @@ strict = true
 mypy_path = "."
 packages = ["backend"]
 
-# Pydantic v2 ships with inline types but mypy sometimes fails to locate
-# them in CI environments. Suppress import errors for these third-party
-# packages rather than blocking the quality gate on stub availability.
-# FastAPI and Starlette do not ship complete stubs; overrides are required.
 [[tool.mypy.overrides]]
 module = [
     "pydantic.*",
@@ -52,10 +43,6 @@ module = [
 ]
 ignore_missing_imports = true
 
-# FastAPI's @router.post() and @app.exception_handler() decorators do not
-# carry sufficient type information for mypy --strict. Disabling
-# disallow_untyped_decorators for these two files avoids false positives
-# without weakening type safety in the engine or business logic.
 [[tool.mypy.overrides]]
 module = ["backend.api.routes", "backend.api.errors"]
 disallow_untyped_decorators = false
@@ -71,4 +58,3 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
 python_files = ["test_*.py"]
-pythonpath = ["."]
