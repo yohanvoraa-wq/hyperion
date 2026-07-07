@@ -1,6 +1,6 @@
-"""Portfolio Ingestion Layer -- public interface.
+"""Portfolio Ingestion Layer — public interface.
 
-Justified by: docs/07-SYSTEM-ARCHITECTURE.md Section 4 (hop 1) and Section 5
+Justified by: docs/07-SYSTEM-ARCHITECTURE.md §4 (hop 1) and §5
 (Entry: Portfolio -> Normalization -> Asset Resolution -> Finance DNA).
 
 Single responsibility: convert a list of raw company identifiers into
@@ -25,7 +25,7 @@ IngestionError, UnknownAssetError, DuplicateAssetError,
 EmptyPortfolioError, AssetDataError
     Exception types for structured error handling.
 
-Boundary contract (07-SYSTEM-ARCHITECTURE.md section 6):
+Boundary contract (07-SYSTEM-ARCHITECTURE.md §6):
     This module imports from backend.models only.
     It never imports from finance_dna, atlas, janus, or titan.
     Finance DNA never sees raw strings; it only ever receives
