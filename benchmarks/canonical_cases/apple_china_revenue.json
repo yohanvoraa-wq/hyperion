@@ -1,0 +1,73 @@
+{
+  "id": "apple_china_revenue",
+  "version": "1.0",
+  "state": "Planned",
+  "pattern": "Currency Exposure",
+  "business_question": "Does Apple's revenue concentration in Greater China create hidden exposure to CNY/USD foreign exchange risk?",
+  "description": "Apple's Greater China segment (mainland China, Hong Kong, Taiwan) represents approximately 19% of total net revenue \u2014 its third-largest geographic market. This revenue is earned primarily in Chinese Yuan (CNY) and reported in USD. When USD strengthens relative to CNY, Apple's Chinese revenue translates to fewer dollars, directly compressing reported earnings. Additionally, Apple's manufacturing base in China means that CNY depreciation relative to USD reduces manufacturing costs in USD terms \u2014 creating a partial natural hedge. However, the revenue effect dominates the manufacturing effect at current scales. An investor holding Apple who does not account for CNY/USD exposure is underestimating currency risk in Apple's earnings.",
+  "input": {
+    "portfolio": [
+      "Apple"
+    ],
+    "as_of": "2024-12-31"
+  },
+  "expected": {
+    "status": "BLIND_SPOT_FOUND",
+    "company": "apple-inc",
+    "confidence": {
+      "min": 0.74,
+      "max": 0.78
+    },
+    "reasoning_path": [
+      {
+        "relationship": "SELLS_TO",
+        "source": "apple-inc",
+        "target": "china"
+      },
+      {
+        "relationship": "AFFECTED_BY",
+        "source": "china",
+        "target": "cny-usd-fx-risk"
+      }
+    ],
+    "required_categories": [
+      "dependency",
+      "macroeconomic"
+    ]
+  },
+  "required_knowledge": {
+    "finance_dna_dimensions": [
+      "geographic_revenue_concentration",
+      "currency_exposure"
+    ],
+    "atlas_node_types": [
+      "COMPANY",
+      "GEOGRAPHY",
+      "MACRO_FACTOR"
+    ],
+    "atlas_relationship_types": [
+      "SELLS_TO",
+      "AFFECTED_BY"
+    ],
+    "atlas_nodes_required": [
+      "apple-inc",
+      "china",
+      "cny-usd-fx-risk"
+    ]
+  },
+  "future_expansion": [
+    "Reuse cny-usd-fx-risk for Tesla (China manufacturing + sales), Qualcomm (China revenue ~60%), Starbucks (China second-largest market)",
+    "Add JPY/USD risk node for Apple Japan revenue segment",
+    "Add EUR/USD risk node for Apple European revenue",
+    "Add natural hedge note: Apple manufacturing in China creates partial CNY cost offset to CNY revenue risk",
+    "Reuse china SELLS_TO relationships for Nike, GM, Starbucks China exposure cases"
+  ],
+  "evidence": [
+    "Apple 10-K FY2024: Greater China segment net sales $66.95bn, approximately 19% of total net revenue",
+    "Apple 10-K FY2024: Foreign exchange risk discussion \u2014 revenue denominated in foreign currencies including CNY",
+    "Apple 10-K FY2024: A hypothetical 10% strengthening of USD would reduce net sales by approximately $4-5bn",
+    "Bloomberg FX data 2022-2024: CNY/USD moved from 6.3 to 7.3 (16% CNY depreciation), impacting Apple Greater China revenue translation",
+    "Apple FY2023 Q4 earnings call: CFO noted FX headwinds reduced Greater China revenue by approximately $1bn year-over-year"
+  ],
+  "notes": "V0.1 Janus returns only the highest-confidence path per asset. Apple's Taiwan supply chain path (0.8075) will always rank above the China currency path (0.68). This case becomes Implemented when Janus supports multi-path reasoning (future) OR when confidence values are recalibrated at Level A. The apple->china SELLS_TO relationship and cny-usd-fx-risk node are already seeded in Atlas and ready for when this case is revisited in a later version."
+}

@@ -1,0 +1,81 @@
+{
+  "id": "alphabet_eu_regulation",
+  "version": "1.0",
+  "state": "Implemented",
+
+  "pattern": "Regulatory Risk",
+
+  "business_question": "Does Alphabet's revenue concentration in the European Union create hidden exposure to EU digital regulation enforcement?",
+
+  "description": "Alphabet derives approximately 30% of Google revenue from the EMEA region, with the European Union representing the largest regulatory jurisdiction outside the United States. The EU Digital Markets Act (DMA) designated Alphabet as a Gatekeeper in September 2023, with enforcement obligations from March 2024. The DMA requires Alphabet to open its platforms (Google Search, Google Play, Chrome, Google Maps) to third-party competitors, prohibits self-preferencing, and imposes interoperability requirements. Non-compliance carries fines of up to 10% of global revenue. An investor holding Alphabet may not recognise that its European revenue concentration creates a structural regulatory exposure that could require fundamental changes to its highest-margin business lines.",
+
+  "input": {
+    "portfolio": ["Alphabet"],
+    "as_of": "2024-12-31"
+  },
+
+  "expected": {
+    "status": "BLIND_SPOT_FOUND",
+    "company": "alphabet",
+    "confidence": {
+      "min": 0.82,
+      "max": 0.84
+    },
+    "reasoning_path": [
+      {
+        "relationship": "SELLS_TO",
+        "source": "alphabet",
+        "target": "european-union"
+      },
+      {
+        "relationship": "AFFECTED_BY",
+        "source": "european-union",
+        "target": "eu-digital-regulation"
+      }
+    ],
+    "required_categories": [
+      "dependency",
+      "macroeconomic"
+    ]
+  },
+
+  "required_knowledge": {
+    "finance_dna_dimensions": [
+      "regulatory_exposure",
+      "regulatory_compliance_cost",
+      "geographic_revenue_concentration"
+    ],
+    "atlas_node_types": [
+      "COMPANY",
+      "GEOGRAPHY",
+      "MACRO_FACTOR"
+    ],
+    "atlas_relationship_types": [
+      "SELLS_TO",
+      "AFFECTED_BY"
+    ],
+    "atlas_nodes_required": [
+      "alphabet",
+      "european-union",
+      "eu-digital-regulation"
+    ]
+  },
+
+  "future_expansion": [
+    "Reuse european-union node for Apple (App Store DMA obligations), Amazon (DSA marketplace rules), Microsoft (EU AI Act)",
+    "Add EU AI Act as a separate MACRO_FACTOR node for AI-specific regulatory risk",
+    "Add GDPR enforcement risk as a second regulatory path for Alphabet",
+    "Add Meta and Apple as additional Gatekeeper-designated companies with SELLS_TO european-union relationships",
+    "Add specific DMA fine events as ECONOMIC_EVENT nodes once enforcement actions are taken"
+  ],
+
+  "evidence": [
+    "Alphabet 2023 Annual Report: EMEA region represented approximately 30% of Google Services revenue",
+    "European Commission: Alphabet designated as Gatekeeper under EU Digital Markets Act, September 2023",
+    "EU Digital Markets Act Article 26: Fines up to 10% of total worldwide annual turnover for non-compliance",
+    "European Commission DMA enforcement: Six core platform services designated for Alphabet including Google Search, Google Play, Google Maps, Google Shopping, YouTube, Chrome",
+    "Bloomberg Law 2024: Alphabet facing DMA investigations across multiple Google services within first year of enforcement"
+  ],
+
+  "notes": "The european-union node is the key reusable asset introduced by this case. It will serve as the geographic connection point for Apple, Amazon, Meta, and Microsoft regulatory cases. Note: the direct alphabet -> AFFECTED_BY -> eu-digital-regulation relationship has been replaced with the two-hop path through european-union to satisfy Titan's non-obvious criterion (steps >= 2). The indirect path through European Union geography is also more accurate — it is the revenue concentration in the EU that creates the exposure, not a direct regulatory relationship."
+}

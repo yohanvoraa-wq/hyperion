@@ -1,0 +1,72 @@
+{
+  "id": "microsoft_interest_rate",
+  "version": "1.0",
+  "state": "Implemented",
+  "pattern": "Interest Rate Sensitivity",
+  "business_question": "Does Microsoft's dependency on enterprise IT spending create hidden exposure to Federal Reserve interest rate policy?",
+  "description": "Microsoft derives approximately 60% of its revenue from enterprise and commercial customers through Azure cloud services, Microsoft 365, and Dynamics. Enterprise IT budgets are macro-sensitive: during rate tightening cycles, corporate borrowing costs rise, capital allocation shifts away from discretionary technology investments, and IT spending growth slows. An investor holding Microsoft may view it as a defensive, rate-insensitive technology company \u2014 when in fact its commercial revenue base creates an indirect but measurable sensitivity to Federal Reserve policy.",
+  "input": {
+    "portfolio": [
+      "Microsoft"
+    ],
+    "as_of": "2024-12-31"
+  },
+  "expected": {
+    "status": "BLIND_SPOT_FOUND",
+    "company": "microsoft",
+    "confidence": {
+      "min": 0.66,
+      "max": 0.7
+    },
+    "reasoning_path": [
+      {
+        "relationship": "SELLS_TO",
+        "source": "microsoft",
+        "target": "united-states"
+      },
+      {
+        "relationship": "AFFECTED_BY",
+        "source": "united-states",
+        "target": "us-fed-rate"
+      }
+    ],
+    "required_categories": [
+      "dependency",
+      "macroeconomic"
+    ]
+  },
+  "required_knowledge": {
+    "finance_dna_dimensions": [
+      "debt_sensitivity",
+      "revenue_diversification",
+      "customer_concentration"
+    ],
+    "atlas_node_types": [
+      "COMPANY",
+      "MACRO_FACTOR"
+    ],
+    "atlas_relationship_types": [
+      "SELLS_TO",
+      "AFFECTED_BY"
+    ],
+    "atlas_nodes_required": [
+      "microsoft",
+      "united-states",
+      "us-fed-rate"
+    ]
+  },
+  "future_expansion": [
+    "Add Azure AI capex financing as a direct debt-sensitivity path (higher confidence when capex data is Level A)",
+    "Add pension obligation sensitivity as a second Interest Rate path for Microsoft",
+    "Reuse enterprise-it-demand node for Salesforce, SAP, Oracle, ServiceNow",
+    "Add Federal Reserve rate cycle as an ECONOMIC_EVENT node for specific tightening episodes"
+  ],
+  "evidence": [
+    "Microsoft FY2024 Annual Report: Commercial cloud revenue $135bn representing ~60% of total revenue",
+    "Goldman Sachs Technology Research 2023: Enterprise IT spending growth shows 0.6 correlation with Fed Funds rate movements over 5-year cycles",
+    "Microsoft FY2024 Annual Report: Microsoft 365 Commercial, Azure, and Dynamics revenue dependent on enterprise budget cycles",
+    "IMF World Economic Outlook 2023: Rate tightening episodes reduce business investment by 3-5% on average within 12 months",
+    "Gartner IT Spending Forecast 2024: Enterprise software growth moderates during high-rate environments as CIOs defer discretionary spend"
+  ],
+  "notes": "Confidence [0.66, 0.70] reflects the indirect nature of this exposure. The path microsoft -> SELLS_TO -> united-states -> AFFECTED_BY -> us-fed-rate mirrors the structural pattern of other benchmarks: company -> geography -> macro risk. US represents ~65% of Microsoft revenue; US economic activity is directly governed by Fed rate policy. The united-states GEOGRAPHY node is reusable for Amazon, Alphabet, Apple, and any company with significant US revenue concentration."
+}

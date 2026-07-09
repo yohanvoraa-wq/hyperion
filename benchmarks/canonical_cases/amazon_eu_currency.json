@@ -1,0 +1,74 @@
+{
+  "id": "amazon_eu_currency",
+  "version": "1.0",
+  "state": "Implemented",
+  "pattern": "Currency Exposure",
+  "business_question": "Does Amazon's revenue concentration in the European Union create hidden exposure to EUR/USD foreign exchange risk?",
+  "description": "Amazon's International segment \u2014 primarily European operations across Germany, UK, France, Italy, Spain, Netherlands, Poland, and Sweden \u2014 generated approximately $131bn in 2023, representing roughly 25% of total net sales. This revenue is earned in EUR, GBP, and other European currencies but reported in USD. When USD strengthens relative to EUR (as it did materially in 2022), Amazon's International segment revenue translates to fewer dollars, directly reducing reported net sales and operating income. An investor holding Amazon who focuses on AWS growth and US retail may not recognise the substantial EUR/USD exposure embedded in the International segment. Note: 'europe' node is distinct from 'european-union' (regulatory jurisdiction) \u2014 Amazon's revenue geography includes UK (post-Brexit) and other non-EU European markets.",
+  "input": {
+    "portfolio": [
+      "Amazon"
+    ],
+    "as_of": "2024-12-31"
+  },
+  "expected": {
+    "status": "BLIND_SPOT_FOUND",
+    "company": "amazon",
+    "confidence": {
+      "min": 0.74,
+      "max": 0.78
+    },
+    "reasoning_path": [
+      {
+        "relationship": "SELLS_TO",
+        "source": "amazon",
+        "target": "europe"
+      },
+      {
+        "relationship": "AFFECTED_BY",
+        "source": "europe",
+        "target": "eur-usd-fx-risk"
+      }
+    ],
+    "required_categories": [
+      "dependency",
+      "macroeconomic"
+    ]
+  },
+  "required_knowledge": {
+    "finance_dna_dimensions": [
+      "geographic_revenue_concentration",
+      "currency_exposure",
+      "revenue_diversification"
+    ],
+    "atlas_node_types": [
+      "COMPANY",
+      "GEOGRAPHY",
+      "MACRO_FACTOR"
+    ],
+    "atlas_relationship_types": [
+      "SELLS_TO",
+      "AFFECTED_BY"
+    ],
+    "atlas_nodes_required": [
+      "amazon",
+      "europe",
+      "eur-usd-fx-risk"
+    ]
+  },
+  "future_expansion": [
+    "Reuse eur-usd-fx-risk for Alphabet (30% EMEA revenue), Microsoft (50% international), Apple (EU revenue segment)",
+    "Add GBP/USD risk node for UK-specific exposure post-Brexit",
+    "Add Amazon energy dependency case (AWS data centers, fulfillment center electricity) as separate benchmark",
+    "Connect european-union to EU minimum wage regulation as Labour Exposure path for Amazon logistics",
+    "Add EUR/CHF risk for Nestle as the CHF reporting currency creates systematic FX exposure"
+  ],
+  "evidence": [
+    "Amazon 2023 Annual Report: International segment net sales $131.2bn; primary markets include Germany, UK, France, Italy, Spain",
+    "Amazon 2023 Annual Report: Foreign currency impact reduced International net sales by $4.8bn in 2022 due to USD strengthening",
+    "Amazon 2023 Annual Report: A 10% change in foreign exchange rates would impact net sales by approximately $6.5bn annually",
+    "ECB/Fed policy divergence 2022: EUR/USD fell from 1.13 to 0.96 (-15%) directly reducing Amazon European revenue translation",
+    "Amazon Q4 2022 earnings: CFO noted FX headwinds of $15.5bn on full-year net sales, with European operations as primary driver"
+  ],
+  "notes": "The european-union GEOGRAPHY node is reused here from alphabet_eu_regulation, demonstrating Atlas network effects \u2014 one node serves both regulatory risk (Alphabet) and currency exposure (Amazon) patterns. The eur-usd-fx-risk MACRO_FACTOR is new and will serve Alphabet, Microsoft, Apple, and Nestle in future currency exposure cases. Note: apple_china_revenue uses the same pattern but is currently Planned because Apple's Taiwan supply chain path has higher confidence \u2014 a single-path Janus architecture limitation to be addressed in a future version."
+}
