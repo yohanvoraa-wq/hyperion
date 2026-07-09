@@ -1,0 +1,106 @@
+{
+  "id": "nestle_coffee",
+  "version": "1.0",
+  "state": "Implemented",
+  "pattern": "Commodity Shock",
+  "business_question": "Does Nestl\u00e9's dependence on coffee as a primary input commodity create hidden exposure to climate-driven supply disruptions in Brazil?",
+  "description": "Nestl\u00e9 is the world's largest food and beverage company and the largest consumer of coffee globally, sourcing approximately 10% of the world's coffee supply. Brazil is the world's largest coffee producer, accounting for approximately 35-40% of global supply. Arabica coffee production in Brazil is highly sensitive to frost events (which occurred in 2021), drought, and long-term climate shifts. A material disruption to Brazilian coffee supply creates direct cost pressure on Nestl\u00e9's Nescaf\u00e9 and Nespresso product lines, which together represent significant operating profit. An investor holding Nestl\u00e9 may not recognise that a single climate event in a single geography can materially affect margins across multiple product categories simultaneously.",
+  "input": {
+    "portfolio": [
+      "Nestle"
+    ],
+    "as_of": "2024-12-31"
+  },
+  "expected": {
+    "status": "BLIND_SPOT_FOUND",
+    "company": "nestle",
+    "confidence": {
+      "min": 0.72,
+      "max": 0.74
+    },
+    "reasoning_path": [
+      {
+        "relationship": "EXPOSED_TO",
+        "source": "nestle",
+        "target": "coffee"
+      },
+      {
+        "relationship": "LOCATED_IN",
+        "source": "coffee",
+        "target": "brazil"
+      },
+      {
+        "relationship": "AFFECTED_BY",
+        "source": "brazil",
+        "target": "brazil-climate-risk"
+      }
+    ],
+    "required_categories": [
+      "commodity",
+      "macroeconomic"
+    ]
+  },
+  "required_knowledge": {
+    "finance_dna_dimensions": [
+      "commodity_input_exposure",
+      "supply_chain_complexity",
+      "geographic_revenue_concentration"
+    ],
+    "atlas_node_types": [
+      "COMPANY",
+      "COMMODITY",
+      "GEOGRAPHY",
+      "MACRO_FACTOR"
+    ],
+    "atlas_relationship_types": [
+      "EXPOSED_TO",
+      "LOCATED_IN",
+      "AFFECTED_BY"
+    ],
+    "atlas_nodes_required": [
+      "nestle",
+      "coffee",
+      "brazil",
+      "brazil-climate-risk"
+    ]
+  },
+  "what_must_be_built": {
+    "asset_registry": [
+      "Add Nestl\u00e9 to datasets/assets.csv with sector: Consumer Staples, industry: Food Processing"
+    ],
+    "finance_dna": [
+      "Nestl\u00e9 must score HIGH on commodity_input_exposure (coffee, cocoa, palm oil are primary inputs)",
+      "Nestl\u00e9 must score HIGH on supply_chain_complexity (global agricultural sourcing)",
+      "Nestl\u00e9 must score MEDIUM on geographic_revenue_concentration (diversified but EM exposed)"
+    ],
+    "atlas_nodes": [
+      "coffee \u2014 COMMODITY node",
+      "cocoa \u2014 COMMODITY node (for future expansion)",
+      "palm-oil \u2014 COMMODITY node (for future expansion)",
+      "brazil \u2014 GEOGRAPHY node",
+      "brazil-climate-risk \u2014 MACRO_FACTOR node"
+    ],
+    "atlas_relationships": [
+      "nestle \u2192 EXPOSED_TO \u2192 coffee (confidence: 0.90, evidence: Nestl\u00e9 largest global coffee buyer)",
+      "coffee \u2192 LOCATED_IN \u2192 brazil (confidence: 0.85, evidence: Brazil 35-40% global supply)",
+      "brazil \u2192 AFFECTED_BY \u2192 brazil-climate-risk (confidence: 0.80, evidence: 2021 frost event)"
+    ],
+    "janus_pattern": "The existing Asset \u2192 EXPOSED_TO \u2192 COMMODITY \u2192 LOCATED_IN \u2192 GEOGRAPHY \u2192 AFFECTED_BY \u2192 MACRO_FACTOR pattern requires Janus to support a COMMODITY node in the reasoning chain. This is a new node class in the path. Evaluate whether the existing traversal algorithm handles COMMODITY nodes or requires a new V0.2 reasoning pattern.",
+    "status": "COMPLETED in Session 4 Atlas Expansion"
+  },
+  "future_expansion": [
+    "Add cocoa and Ghana/Ivory Coast as a second Commodity Shock case for Nestl\u00e9",
+    "Add palm oil and Indonesia/Malaysia as a third Commodity Shock case",
+    "Add water scarcity as an Environmental Exposure case for Nestl\u00e9's manufacturing",
+    "Add Nestl\u00e9's pricing power dimension to demonstrate ability to pass through commodity costs",
+    "Add coffee \u2192 Colombia, Ethiopia, Vietnam as alternative sourcing geographies"
+  ],
+  "evidence": [
+    "Nestl\u00e9 Annual Report 2023: Coffee identified as largest single raw material input by value",
+    "ICO (International Coffee Organization): Brazil accounts for 35-40% of global coffee production",
+    "Reuters, August 2021: Brazil frost event destroys significant portion of arabica crop, prices surge 40%",
+    "Nestl\u00e9 Annual Report 2023: Nescaf\u00e9 and Nespresso are among top 5 revenue-generating brands",
+    "IPCC AR6 Report 2022: Coffee-growing regions in Brazil facing increased climate volatility"
+  ],
+  "notes": "This case is currently State C because Nestl\u00e9 is not in the asset registry and none of the required Atlas nodes exist. It defines the complete shopping list for the Commodity Shock pattern in Version 0.2. The janus_pattern note in what_must_be_built is important: the current Janus traversal may need extension to handle COMMODITY as an intermediate node type, since EXPOSED_TO \u2192 COMMODITY is a different path structure than DEPENDS_ON_SUPPLIES \u2192 COMPANY. Evaluate this before adding Atlas nodes."
+}

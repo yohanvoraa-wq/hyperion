@@ -1,0 +1,75 @@
+{
+  "id": "nvidia_export_controls",
+  "version": "1.0",
+  "state": "Implemented",
+  "pattern": "Regulatory Risk",
+  "business_question": "Do US semiconductor export controls create hidden revenue concentration risk for NVIDIA in its largest growth market?",
+  "description": "NVIDIA derives significant revenue from data center customers in China. US Bureau of Industry and Security export control regulations (BIS Entity List, October 2022 and subsequent updates) restrict the sale of advanced AI accelerators including A100 and H100 to Chinese customers without a license. NVIDIA's attempt to create compliant variants (A800, H800) was subsequently also restricted. An investor holding NVIDIA may not recognise that regulatory action by a single government agency can materially impair access to a market representing a substantial portion of data center revenue.",
+  "input": {
+    "portfolio": [
+      "NVIDIA"
+    ],
+    "as_of": "2024-12-31"
+  },
+  "expected": {
+    "status": "BLIND_SPOT_FOUND",
+    "company": "nvidia",
+    "confidence": {
+      "min": 0.8,
+      "max": 0.82
+    },
+    "reasoning_path": [
+      {
+        "relationship": "SELLS_TO",
+        "source": "nvidia",
+        "target": "china"
+      },
+      {
+        "relationship": "AFFECTED_BY",
+        "source": "china",
+        "target": "semiconductor-export-ban"
+      }
+    ],
+    "required_categories": [
+      "dependency",
+      "macroeconomic"
+    ]
+  },
+  "required_knowledge": {
+    "finance_dna_dimensions": [
+      "regulatory_exposure",
+      "geographic_revenue_concentration"
+    ],
+    "atlas_node_types": [
+      "COMPANY",
+      "GEOGRAPHY",
+      "REGULATION",
+      "ECONOMIC_EVENT"
+    ],
+    "atlas_relationship_types": [
+      "SELLS_TO",
+      "REGULATED_BY",
+      "AFFECTED_BY"
+    ],
+    "atlas_nodes_required": [
+      "nvidia",
+      "china",
+      "us-bis-export-controls",
+      "semiconductor-export-ban"
+    ]
+  },
+  "future_expansion": [
+    "Add HBM memory supplier concentration (SK Hynix, Samsung, Micron) as a Supplier Concentration case",
+    "Add ASML dependency through TSMC as a second-order Supplier Concentration case",
+    "Add EU AI Act as a separate Regulatory Risk case once enforcement begins",
+    "Add data center electricity demand as an Energy Dependency case for NVIDIA's hyperscaler customers"
+  ],
+  "evidence": [
+    "US BIS October 7, 2022: Export controls on advanced computing chips to China, Russia",
+    "US BIS October 17, 2023: Expansion of controls to cover A800 and H800 variants",
+    "NVIDIA 10-K FY2024: China and Hong Kong represented approximately 17% of revenue",
+    "NVIDIA 10-K FY2024: Data Center segment identified as primary revenue driver",
+    "Reuters, October 2023: NVIDIA warns controls will cause significant revenue impact in China"
+  ],
+  "notes": "Confidence range is wider than apple_taiwan because the exact path through regulatory nodes will depend on confidence values assigned to us-bis-export-controls and semiconductor-export-ban when added. Tighten the range once those nodes are seeded with their initial confidence values."
+}

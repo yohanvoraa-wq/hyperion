@@ -1,0 +1,79 @@
+{
+  "id": "apple_taiwan",
+  "version": "1.0",
+  "state": "Implemented",
+  "pattern": "Supply Chain Risk",
+  "business_question": "Does Apple's semiconductor supply chain create hidden concentration risk through a single geography?",
+  "description": "Apple depends on TSMC as a near-sole-source supplier for Apple Silicon chips. TSMC's primary fabrication capacity is concentrated in Taiwan. Taiwan faces persistent geopolitical risk from cross-strait tensions. An investor holding Apple may not recognise that a geopolitical event in Taiwan could simultaneously disrupt Apple's ability to manufacture its most profitable products.",
+  "input": {
+    "portfolio": [
+      "Apple"
+    ],
+    "as_of": "2024-12-31"
+  },
+  "expected": {
+    "status": "BLIND_SPOT_FOUND",
+    "company": "apple-inc",
+    "confidence": {
+      "min": 0.8,
+      "max": 0.82
+    },
+    "reasoning_path": [
+      {
+        "relationship": "DEPENDS_ON_SUPPLIES",
+        "source": "apple-inc",
+        "target": "tsmc"
+      },
+      {
+        "relationship": "LOCATED_IN",
+        "source": "tsmc",
+        "target": "taiwan"
+      },
+      {
+        "relationship": "AFFECTED_BY",
+        "source": "taiwan",
+        "target": "geopolitical-risk-taiwan"
+      }
+    ],
+    "required_categories": [
+      "dependency",
+      "macroeconomic"
+    ]
+  },
+  "required_knowledge": {
+    "finance_dna_dimensions": [
+      "supply_chain_complexity",
+      "capital_intensity"
+    ],
+    "atlas_node_types": [
+      "COMPANY",
+      "GEOGRAPHY",
+      "MACRO_FACTOR"
+    ],
+    "atlas_relationship_types": [
+      "DEPENDS_ON_SUPPLIES",
+      "LOCATED_IN",
+      "AFFECTED_BY"
+    ],
+    "atlas_nodes_required": [
+      "apple-inc",
+      "tsmc",
+      "taiwan",
+      "taiwan-geopolitical-risk"
+    ]
+  },
+  "future_expansion": [
+    "Add ASML as a second-order supplier dependency (TSMC depends on ASML for EUV lithography)",
+    "Add rare earth elements as a commodity exposure node for Apple Silicon manufacturing",
+    "Add China revenue concentration as a separate Currency Exposure pattern case",
+    "Add alternative fab geographies (Arizona TSMC fab) as a mitigant node once operational",
+    "Add Foxconn assembly concentration in China as a Labour Exposure case"
+  ],
+  "evidence": [
+    "Apple 10-K FY2024: TSMC identified as sole-source supplier for Apple Silicon processors",
+    "Apple 10-K FY2024: Greater China segment represents approximately 19% of net revenue",
+    "TSMC Annual Report 2023: Over 90% of advanced node capacity located in Taiwan",
+    "US DoD: Taiwan Strait identified as high-priority geopolitical risk corridor"
+  ],
+  "notes": "This is the golden example demonstrated in scripts/demo.py. Confidence of 0.8075 was established in Milestone 8 and should remain stable across knowledge expansions. If this case fails after an Atlas or Finance DNA update, investigate changes to TSMC or Taiwan node confidence values first."
+}
