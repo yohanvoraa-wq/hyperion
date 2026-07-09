@@ -81,7 +81,7 @@ class TestMetadata:
         assert pipeline_dto.metadata.hyperion_version == "0.1"
 
     def test_finance_dna_schema_present(self, pipeline_dto: AnalyzeResponseDTO) -> None:
-        assert pipeline_dto.metadata.finance_dna_schema == "0.1"
+        assert pipeline_dto.metadata.finance_dna_schema == "0.2"
 
     def test_processed_at_is_iso_string(self, pipeline_dto: AnalyzeResponseDTO) -> None:
         assert len(pipeline_dto.metadata.processed_at) > 0

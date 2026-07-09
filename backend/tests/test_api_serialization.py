@@ -94,7 +94,7 @@ class TestSchemaStructure:
 
     def test_metadata_fields_all_present(self, full_schema: AnalyzeResponseSchema) -> None:
         assert full_schema.metadata.hyperion_version == "0.1"
-        assert full_schema.metadata.finance_dna_schema == "0.1"
+        assert full_schema.metadata.finance_dna_schema == "0.2"
         assert len(full_schema.metadata.processed_at) > 0
         assert full_schema.metadata.processing_time_ms == 42
         assert len(full_schema.metadata.request_id) > 0
@@ -199,7 +199,7 @@ class TestGoldenResponse:
 
     def test_golden_metadata_versions(self, parsed_response: dict) -> None:  # type: ignore[type-arg]
         assert parsed_response["metadata"]["hyperion_version"] == "0.1"
-        assert parsed_response["metadata"]["finance_dna_schema"] == "0.1"
+        assert parsed_response["metadata"]["finance_dna_schema"] == "0.2"
 
     def test_golden_portfolio_names(self, parsed_response: dict) -> None:  # type: ignore[type-arg]
         assert parsed_response["portfolio"] == [
