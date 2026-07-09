@@ -34,12 +34,13 @@ import datetime
 from backend.finance_dna.registry import REGISTRY
 from backend.models import Asset, FinanceDNA
 
-FINANCE_DNA_VERSION: str = "0.1"
+FINANCE_DNA_VERSION: str = "0.2"
 """Current Finance DNA schema version.
-Incremented when the registered dimension set changes materially
-(additions, removals, or re-definitions that break backward compatibility).
-Atlas consumers record this value alongside any FinanceDNA they store.
-"""
+V0.2 adds 9 new dimensions (Pricing Power, Customer Concentration,
+Supplier Concentration, Revenue Diversification, Debt Sensitivity,
+Currency Exposure, Energy Dependency, Labour Intensity, Regulatory
+Compliance Cost) for a total of 15 dimensions.
+Incremented when the registered dimension set changes materially."""
 
 
 def evaluate(asset: Asset, *, as_of: str | None = None) -> FinanceDNA:
