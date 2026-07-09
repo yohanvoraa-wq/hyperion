@@ -5,7 +5,7 @@ the conceptual documents. Nothing is invented; the source section is cited
 on each class.
 """
 
-from enum import Enum, auto
+from enum import Enum, StrEnum, auto
 
 # ---------------------------------------------------------------------------
 # 04-FINANCE-DNA.md §3 — Types of Financial Dimensions
@@ -33,14 +33,60 @@ class TemporalBehavior(Enum):
 
 
 class DimensionCategory(Enum):
-    """The six official categories from Finance DNA Section 5C."""
+    """The six V0.1 categories from Finance DNA Section 5C, plus three V0.2 categories.
 
+    V0.1 categories reflect the original Finance DNA conceptual framework.
+    V0.2 adds MARKET_STRUCTURE, FINANCIAL_STRUCTURE, OPERATIONAL_STRUCTURE
+    to capture the nine new dimensions from the V0.2 knowledge expansion.
+    """
+
+    # V0.1 — original six
     BUSINESS_STRUCTURE = auto()
     REVENUE_STRUCTURE = auto()
     COST_AND_CAPITAL_STRUCTURE = auto()
     MACROECONOMIC_AND_REGULATORY_SENSITIVITY = auto()
     INNOVATION_AND_TECHNOLOGY = auto()
     GOVERNANCE_AND_CAPITAL_ALLOCATION = auto()
+
+    # V0.2 — three new categories
+    MARKET_STRUCTURE = auto()       # Pricing Power, Customer/Supplier Concentration
+    FINANCIAL_STRUCTURE = auto()    # Revenue Diversification, Debt Sensitivity, Currency Exposure
+    OPERATIONAL_STRUCTURE = auto()  # Energy Dependency, Labour Intensity, Reg. Compliance Cost
+
+
+# ---------------------------------------------------------------------------
+# 04-FINANCE-DNA-v0.2.md — Approximation Level
+# ---------------------------------------------------------------------------
+
+
+class ApproximationLevel(StrEnum):
+    """The quality of the data source used to derive a Finance DNA score.
+
+    Justified by: docs/04-FINANCE-DNA-v0.2.md (Approximation Level Framework).
+
+    Approximation Level measures HOW a score was derived, not how strong
+    the supporting evidence is (that is Evidence Maturity — a V0.3 concept).
+
+    A = Company-specific data (audited filings, disclosed metrics). Highest quality.
+    B = Industry approximation (industry research, SIC classification). Medium quality.
+    C = Sector approximation (broad sector characteristics). Lowest quality.
+    UNKNOWN = No reliable approximation exists. Score is None — never 0.0.
+
+    V0.1 dimensions are retroactively classified as Level C.
+    V0.2 dimensions are Level B (industry approximation).
+    Level A requires automated ingestion of company filings (Version 0.4 work).
+
+    The confidence modifier applied at evaluation time:
+      A → 1.00  (no penalty)
+      B → 0.85  (15% quality penalty)
+      C → 0.70  (30% quality penalty)
+      UNKNOWN → dimension excluded from aggregation
+    """
+
+    A = "A"
+    B = "B"
+    C = "C"
+    UNKNOWN = "UNKNOWN"
 
 
 # ---------------------------------------------------------------------------

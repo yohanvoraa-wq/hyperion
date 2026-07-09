@@ -26,6 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from backend.models.enums import (
+    ApproximationLevel,
     DimensionCategory,
     EvidenceSource,
     TemporalBehavior,
@@ -123,3 +124,16 @@ class Dimension:
     False (Derived) if it is computed from other qualified Dimensions
     (e.g. Technology Obsolescence Risk depends on R&D Intensity and
     Patent / IP Intensity). See Finance DNA §6 and Candidate Board."""
+
+    approximation_level: ApproximationLevel = field(default=ApproximationLevel.C)
+    """Quality of the data source used to derive this score.
+    Justified by: docs/04-FINANCE-DNA-v0.2.md (Approximation Level Framework).
+
+    V0.1 dimensions default to Level C (sector approximation) — retroactive
+    classification that changes no score values, only adds transparency.
+    V0.2 dimensions set Level B (industry approximation) explicitly.
+    Level A (company-specific data) requires automated filing ingestion (V0.4).
+
+    UNKNOWN means no reliable approximation exists — score should be None
+    and dimension excluded from aggregation. Never store 0.0 for UNKNOWN.
+    """
