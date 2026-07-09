@@ -10,3 +10,11 @@ microsoft,software-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED
 alphabet,internet-services-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,Alphabet Inc. classified Technology/Internet Services per SEC filings
 amazon,ecommerce-cloud-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,Amazon.com Inc. classified Consumer Discretionary/E-Commerce per SEC filings
 nestle,food-beverages-industry,BELONGS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,1.0,Nestle S.A. classified Consumer Staples/Food & Beverages per public filings
+nvidia,china,SELLS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,DISCLOSED,0.90,NVIDIA 10-K FY2024: China and Hong Kong represented approximately 17% of revenue
+china,semiconductor-export-ban,AFFECTED_BY,DIRECTED,EVENT_DRIVEN,ONE_TO_MANY,PUBLIC_RECORD,0.90,US BIS October 2022 and October 2023 export control regulations restrict advanced AI chip sales to China
+nestle,coffee,EXPOSED_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,PUBLIC_RECORD,0.95,Nestle Annual Report 2023: coffee identified as largest single raw material input by value; Nestle is world's largest coffee buyer
+coffee,brazil,LOCATED_IN,DIRECTED,PERSISTENT,ONE_TO_MANY,PUBLIC_RECORD,0.90,ICO 2024: Brazil accounts for 35-40% of global coffee production consistently
+brazil,brazil-climate-risk,AFFECTED_BY,DIRECTED,EVENT_DRIVEN,ONE_TO_MANY,PUBLIC_RECORD,0.85,Reuters August 2021: Brazil frost event destroyed significant arabica crop; IPCC AR6 confirms rising climate volatility in Brazilian coffee regions
+alphabet,eu-digital-regulation,AFFECTED_BY,DIRECTED,EVENT_DRIVEN,ONE_TO_MANY,PUBLIC_RECORD,0.90,Alphabet designated as Gatekeeper under EU Digital Markets Act 2023; facing DSA and EU AI Act compliance obligations
+microsoft,us-fed-rate,AFFECTED_BY,DIRECTED,PERSISTENT,ONE_TO_MANY,DERIVED,0.35,Microsoft net cash positive; rising rates are a mild tailwind on cash holdings — included as low-confidence relationship to support Interest Rate Sensitivity pattern testing
+amazon,china,SELLS_TO,DIRECTED,PERSISTENT,ONE_TO_MANY,PUBLIC_RECORD,0.65,Amazon operates marketplace in China through third-party arrangements; moderate China revenue exposure via AWS and marketplace

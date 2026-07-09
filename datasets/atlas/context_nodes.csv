@@ -5,5 +5,11 @@ semiconductor-industry,INDUSTRY,Semiconductors
 software-industry,INDUSTRY,Software
 internet-services-industry,INDUSTRY,Internet Services
 ecommerce-cloud-industry,INDUSTRY,E-Commerce & Cloud Services
-consumer-electronics-industry,INDUSTRY,Consumer Electronics
 food-beverages-industry,INDUSTRY,Food & Beverages
+china,GEOGRAPHY,China
+semiconductor-export-ban,MACRO_FACTOR,US-China Semiconductor Export Controls
+coffee,COMMODITY,Coffee (Arabica & Robusta)
+brazil,GEOGRAPHY,Brazil
+brazil-climate-risk,MACRO_FACTOR,Brazil Agricultural Climate Risk
+us-fed-rate,MACRO_FACTOR,US Federal Reserve Interest Rate Policy
+eu-digital-regulation,MACRO_FACTOR,EU Digital Markets Act & AI Act Regulatory Risk
