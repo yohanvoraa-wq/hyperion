@@ -40,3 +40,6 @@ jobs:
 
       - name: Verify demo script runs
         run: python scripts/demo.py
+
+      - name: Benchmark suite — canonical reasoning cases
+        run: python scripts/run_benchmarks.py
