@@ -425,9 +425,9 @@ class TestDeterminism:
 
 class TestCompleteFinanceDNA:
     @pytest.mark.parametrize("asset", list(ALL_ASSETS))
-    def test_contains_exactly_six_dimensions(self, asset: Asset) -> None:
+    def test_contains_exactly_fifteen_dimensions(self, asset: Asset) -> None:
         dna = evaluate(asset, as_of=TEST_DATE)
-        assert len(dna.dimensions) == 6
+        assert len(dna.dimensions) == 15
 
     @pytest.mark.parametrize("asset", list(ALL_ASSETS))
     def test_no_duplicate_dimension_names(self, asset: Asset) -> None:
@@ -448,7 +448,7 @@ class TestCompleteFinanceDNA:
 
     def test_finance_dna_version_is_correct(self) -> None:
         dna = evaluate(APPLE, as_of=TEST_DATE)
-        assert dna.version == FINANCE_DNA_VERSION == "0.1"
+        assert dna.version == FINANCE_DNA_VERSION == "0.2"
 
     def test_finance_dna_is_immutable(self) -> None:
         dna = evaluate(APPLE, as_of=TEST_DATE)
@@ -632,3 +632,294 @@ class TestRegistryIntegrity:
         assert isinstance(registered, RegisteredDimension)
         dimension = registered.evaluator(APPLE, TEST_DATE)
         assert dimension.aggregation_rule == registered.definition.aggregation_rule
+
+
+# ===========================================================================
+# V0.2 Finance DNA Tests — 9 new dimensions
+# ===========================================================================
+
+from backend.finance_dna.rules import (  # noqa: E402
+    evaluate_currency_exposure,
+    evaluate_customer_concentration,
+    evaluate_debt_sensitivity,
+    evaluate_energy_dependency,
+    evaluate_labour_intensity,
+    evaluate_pricing_power,
+    evaluate_regulatory_compliance_cost,
+    evaluate_revenue_diversification,
+    evaluate_supplier_concentration,
+)
+from backend.models.enums import ApproximationLevel  # noqa: E402
+
+
+class TestV02Dimensions:
+    """Tests for all nine V0.2 Finance DNA dimensions.
+
+    Structure mirrors V0.1 test groups:
+      Group A — Score values (spot checks per asset)
+      Group B — Score ranges (all values in [0.0, 1.0])
+      Group C — Approximation Level (all V0.2 = Level B)
+      Group D — Confidence (all V0.2 = 0.65)
+      Group E — Determinism (100 runs, same result)
+      Group F — Registry integrity (evaluator produces matching name)
+    """
+
+    # --- Group A: Score spot checks -----------------------------------------
+
+    def test_pricing_power_semiconductor_is_high(self) -> None:
+        d = evaluate_pricing_power(NVIDIA, TEST_DATE)
+        assert d.score == 0.85
+
+    def test_pricing_power_software_is_high(self) -> None:
+        d = evaluate_pricing_power(MICROSOFT, TEST_DATE)
+        assert d.score == 0.85
+
+    def test_pricing_power_consumer_electronics_is_medium(self) -> None:
+        d = evaluate_pricing_power(APPLE, TEST_DATE)
+        assert d.score == 0.60
+
+    def test_pricing_power_food_beverages_is_medium(self) -> None:
+        d = evaluate_pricing_power(NESTLE, TEST_DATE)
+        assert d.score == 0.50
+
+    def test_customer_concentration_semiconductor_is_high(self) -> None:
+        d = evaluate_customer_concentration(TSMC, TEST_DATE)
+        assert d.score == 0.70
+
+    def test_customer_concentration_consumer_electronics_is_low(self) -> None:
+        d = evaluate_customer_concentration(APPLE, TEST_DATE)
+        assert d.score == 0.15
+
+    def test_customer_concentration_software_is_low(self) -> None:
+        d = evaluate_customer_concentration(MICROSOFT, TEST_DATE)
+        assert d.score == 0.25
+
+    def test_supplier_concentration_semiconductor_is_very_high(self) -> None:
+        d = evaluate_supplier_concentration(NVIDIA, TEST_DATE)
+        assert d.score == 0.90
+
+    def test_supplier_concentration_software_is_very_low(self) -> None:
+        d = evaluate_supplier_concentration(MICROSOFT, TEST_DATE)
+        assert d.score == 0.10
+
+    def test_supplier_concentration_consumer_electronics_is_high(self) -> None:
+        d = evaluate_supplier_concentration(APPLE, TEST_DATE)
+        assert d.score == 0.80
+
+    def test_revenue_diversification_semiconductor_is_low(self) -> None:
+        d = evaluate_revenue_diversification(NVIDIA, TEST_DATE)
+        assert d.score == 0.30
+
+    def test_revenue_diversification_food_beverages_is_high(self) -> None:
+        d = evaluate_revenue_diversification(NESTLE, TEST_DATE)
+        assert d.score == 0.75
+
+    def test_revenue_diversification_software_is_medium_high(self) -> None:
+        d = evaluate_revenue_diversification(MICROSOFT, TEST_DATE)
+        assert d.score == 0.65
+
+    def test_debt_sensitivity_software_is_very_low(self) -> None:
+        d = evaluate_debt_sensitivity(MICROSOFT, TEST_DATE)
+        assert d.score == 0.15
+
+    def test_debt_sensitivity_consumer_electronics_is_very_low(self) -> None:
+        d = evaluate_debt_sensitivity(APPLE, TEST_DATE)
+        assert d.score == 0.15
+
+    def test_debt_sensitivity_food_beverages_is_medium(self) -> None:
+        d = evaluate_debt_sensitivity(NESTLE, TEST_DATE)
+        assert d.score == 0.50
+
+    def test_currency_exposure_semiconductor_is_high(self) -> None:
+        d = evaluate_currency_exposure(TSMC, TEST_DATE)
+        assert d.score == 0.80
+
+    def test_currency_exposure_food_beverages_is_high(self) -> None:
+        d = evaluate_currency_exposure(NESTLE, TEST_DATE)
+        assert d.score == 0.80
+
+    def test_currency_exposure_ecommerce_is_lower(self) -> None:
+        d = evaluate_currency_exposure(AMAZON, TEST_DATE)
+        assert d.score == 0.45
+
+    def test_energy_dependency_semiconductor_is_very_high(self) -> None:
+        d = evaluate_energy_dependency(TSMC, TEST_DATE)
+        assert d.score == 0.85
+
+    def test_energy_dependency_ecommerce_cloud_is_high(self) -> None:
+        d = evaluate_energy_dependency(AMAZON, TEST_DATE)
+        assert d.score == 0.75
+
+    def test_energy_dependency_software_is_very_low(self) -> None:
+        d = evaluate_energy_dependency(MICROSOFT, TEST_DATE)
+        assert d.score == 0.15
+
+    def test_labour_intensity_ecommerce_is_very_high(self) -> None:
+        d = evaluate_labour_intensity(AMAZON, TEST_DATE)
+        assert d.score == 0.80
+
+    def test_labour_intensity_software_is_low(self) -> None:
+        d = evaluate_labour_intensity(MICROSOFT, TEST_DATE)
+        assert d.score == 0.25
+
+    def test_labour_intensity_food_beverages_is_high(self) -> None:
+        d = evaluate_labour_intensity(NESTLE, TEST_DATE)
+        assert d.score == 0.65
+
+    def test_regulatory_compliance_cost_internet_services_is_high(self) -> None:
+        d = evaluate_regulatory_compliance_cost(ALPHABET, TEST_DATE)
+        assert d.score == 0.75
+
+    def test_regulatory_compliance_cost_software_is_medium(self) -> None:
+        d = evaluate_regulatory_compliance_cost(MICROSOFT, TEST_DATE)
+        assert d.score == 0.45
+
+    def test_regulatory_compliance_cost_food_beverages_is_high(self) -> None:
+        d = evaluate_regulatory_compliance_cost(NESTLE, TEST_DATE)
+        assert d.score == 0.65
+
+    # --- Group B: Score ranges -----------------------------------------------
+
+    @pytest.mark.parametrize("asset", list(ALL_ASSETS))
+    def test_all_v02_scores_in_range(self, asset: Asset) -> None:
+        """All nine V0.2 evaluators must produce scores in [0.0, 1.0]."""
+        evaluators = [
+            evaluate_pricing_power,
+            evaluate_customer_concentration,
+            evaluate_supplier_concentration,
+            evaluate_revenue_diversification,
+            evaluate_debt_sensitivity,
+            evaluate_currency_exposure,
+            evaluate_energy_dependency,
+            evaluate_labour_intensity,
+            evaluate_regulatory_compliance_cost,
+        ]
+        for evaluator in evaluators:
+            d = evaluator(asset, TEST_DATE)
+            assert isinstance(d.score, float), (
+                f"{evaluator.__name__}: score must be float, got {type(d.score)}"
+            )
+            assert 0.0 <= d.score <= 1.0, (
+                f"{evaluator.__name__} for {asset.id}: score {d.score} out of range"
+            )
+
+    # --- Group C: Approximation Level ----------------------------------------
+
+    @pytest.mark.parametrize("asset", list(ALL_ASSETS))
+    def test_all_v02_dimensions_are_level_b(self, asset: Asset) -> None:
+        """All V0.2 dimensions must carry ApproximationLevel.B."""
+        evaluators = [
+            evaluate_pricing_power,
+            evaluate_customer_concentration,
+            evaluate_supplier_concentration,
+            evaluate_revenue_diversification,
+            evaluate_debt_sensitivity,
+            evaluate_currency_exposure,
+            evaluate_energy_dependency,
+            evaluate_labour_intensity,
+            evaluate_regulatory_compliance_cost,
+        ]
+        for evaluator in evaluators:
+            d = evaluator(asset, TEST_DATE)
+            assert d.approximation_level == ApproximationLevel.B, (
+                f"{evaluator.__name__} for {asset.id}: "
+                f"expected Level B, got {d.approximation_level}"
+            )
+
+    @pytest.mark.parametrize("asset", list(ALL_ASSETS))
+    def test_all_v01_dimensions_are_level_c(self, asset: Asset) -> None:
+        """V0.1 dimensions must carry ApproximationLevel.C (retroactive classification)."""
+        dna = evaluate(asset, as_of=TEST_DATE)
+        v01_names = {
+            "Capital Intensity", "Commodity Input Exposure", "Supply Chain Complexity",
+            "Innovation Intensity", "Regulatory Exposure", "Geographic Revenue Concentration",
+        }
+        for d in dna.dimensions:
+            if d.name in v01_names:
+                assert d.approximation_level == ApproximationLevel.C, (
+                    f"V0.1 dimension '{d.name}' for {asset.id}: "
+                    f"expected Level C, got {d.approximation_level}"
+                )
+
+    # --- Group D: Confidence -------------------------------------------------
+
+    @pytest.mark.parametrize("asset", list(ALL_ASSETS))
+    def test_v02_confidence_is_065(self, asset: Asset) -> None:
+        """All V0.2 dimensions must use confidence = 0.65."""
+        evaluators = [
+            evaluate_pricing_power,
+            evaluate_customer_concentration,
+            evaluate_supplier_concentration,
+            evaluate_revenue_diversification,
+            evaluate_debt_sensitivity,
+            evaluate_currency_exposure,
+            evaluate_energy_dependency,
+            evaluate_labour_intensity,
+            evaluate_regulatory_compliance_cost,
+        ]
+        for evaluator in evaluators:
+            d = evaluator(asset, TEST_DATE)
+            assert d.confidence == pytest.approx(0.65), (
+                f"{evaluator.__name__} for {asset.id}: confidence should be 0.65"
+            )
+
+    # --- Group E: Determinism ------------------------------------------------
+
+    def test_v02_dimensions_deterministic_100_runs(self) -> None:
+        """100 evaluations of each V0.2 dimension for Apple must produce identical results."""
+        evaluators = [
+            evaluate_pricing_power,
+            evaluate_customer_concentration,
+            evaluate_supplier_concentration,
+            evaluate_revenue_diversification,
+            evaluate_debt_sensitivity,
+            evaluate_currency_exposure,
+            evaluate_energy_dependency,
+            evaluate_labour_intensity,
+            evaluate_regulatory_compliance_cost,
+        ]
+        for evaluator in evaluators:
+            first = evaluator(APPLE, TEST_DATE)
+            for _ in range(99):
+                assert evaluator(APPLE, TEST_DATE) == first, (
+                    f"{evaluator.__name__} is not deterministic"
+                )
+
+    # --- Group F: Registry integrity -----------------------------------------
+
+    def test_v02_registry_evaluators_produce_correct_names(self) -> None:
+        """Each V0.2 registered evaluator must produce a Dimension whose name
+        matches its DimensionDefinition — catches definition/evaluator wiring bugs."""
+        from backend.finance_dna.registry import REGISTRY
+        v02_names = {
+            "Pricing Power", "Customer Concentration", "Supplier Concentration",
+            "Revenue Diversification", "Debt Sensitivity", "Currency Exposure",
+            "Energy Dependency", "Labour Intensity", "Regulatory Compliance Cost",
+        }
+        for registered in REGISTRY:
+            if registered.definition.name in v02_names:
+                produced = registered.evaluator(APPLE, TEST_DATE)
+                assert produced.name == registered.definition.name, (
+                    f"Wiring bug: definition '{registered.definition.name}' "
+                    f"produces Dimension named '{produced.name}'"
+                )
+
+    def test_total_registry_has_fifteen_dimensions(self) -> None:
+        from backend.finance_dna.registry import REGISTRY
+        assert len(REGISTRY) == 15
+
+    def test_no_duplicate_names_in_registry(self) -> None:
+        from backend.finance_dna.registry import REGISTRY
+        names = [r.definition.name for r in REGISTRY]
+        assert len(names) == len(set(names)), f"Duplicate names in REGISTRY: {names}"
+
+    # --- Full pipeline smoke test -------------------------------------------
+
+    @pytest.mark.parametrize("asset", list(ALL_ASSETS))
+    def test_full_15_dimension_pipeline(self, asset: Asset) -> None:
+        """Full evaluate() must return 15 dimensions for every registered asset."""
+        dna = evaluate(asset, as_of=TEST_DATE)
+        assert len(dna.dimensions) == 15
+        assert dna.version == "0.2"
+        names = [d.name for d in dna.dimensions]
+        assert len(names) == len(set(names)), f"Duplicate dimensions for {asset.id}"
