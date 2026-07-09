@@ -99,11 +99,11 @@ def run() -> None:
     # Header
     print(f"\n{_rule()}")
     print(f"  Hyperion v0.1  (Finance DNA schema {FINANCE_DNA_VERSION})")
-    print(f"  Financial Reasoning Demonstration")
+    print("  Financial Reasoning Demonstration")
     print(_rule())
 
     # Portfolio display
-    print(f"\n  Portfolio\n")
+    print("\n  Portfolio\n")
     for name in DEMO_PORTFOLIO:
         print(_bullet(name))
 
@@ -196,29 +196,29 @@ def _print_blind_spot(n: int, company_name: str, bs: BlindSpot) -> None:
 
     print(f"\n  Blind Spot #{n}")
 
-    print(f"\n  Company")
+    print("\n  Company")
     print(f"    {company_name}")
 
-    print(f"\n  Reasoning Chain")
+    print("\n  Reasoning Chain")
     for line in _chain_lines(artifact):
         print(line)
 
-    print(f"\n  Why it matters")
+    print("\n  Why it matters")
     for step in artifact.reasoning_steps:
         print(f"    {step.inference}")
 
-    print(f"\n  Confidence")
+    print("\n  Confidence")
     print(f"    {bs.confidence:.4f}")
 
-    print(f"\n  Supporting Evidence")
+    print("\n  Supporting Evidence")
     for ev in artifact.supporting_evidence:
         print(_bullet(ev))
 
-    print(f"\n  Assumptions")
+    print("\n  Assumptions")
     for assumption in artifact.assumptions:
         print(_bullet(assumption))
 
-    print(f"\n  What changes this conclusion")
+    print("\n  What changes this conclusion")
     for condition in artifact.falsifiability_conditions:
         print(_bullet(condition))
 
