@@ -13,3 +13,8 @@ brazil,GEOGRAPHY,Brazil
 brazil-climate-risk,MACRO_FACTOR,Brazil Agricultural Climate Risk
 us-fed-rate,MACRO_FACTOR,US Federal Reserve Interest Rate Policy
 eu-digital-regulation,MACRO_FACTOR,EU Digital Markets Act & AI Act Regulatory Risk
+united-states,GEOGRAPHY,United States
+european-union,GEOGRAPHY,European Union
+cny-usd-fx-risk,MACRO_FACTOR,CNY/USD Foreign Exchange Risk
+eur-usd-fx-risk,MACRO_FACTOR,EUR/USD Foreign Exchange Risk
+europe,GEOGRAPHY,Europe
