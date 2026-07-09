@@ -113,11 +113,11 @@ class TestFinanceDNAStep:
         from backend.finance_dna import FINANCE_DNA_VERSION
 
         for dna in pipeline["finance_dnas"].values():
-            assert dna.version == FINANCE_DNA_VERSION == "0.1"
+            assert dna.version == FINANCE_DNA_VERSION == "0.2"
 
-    def test_each_dna_has_six_dimensions(self, pipeline: dict) -> None:  # type: ignore[type-arg]
+    def test_each_dna_has_fifteen_dimensions(self, pipeline: dict) -> None:  # type: ignore[type-arg]
         for dna in pipeline["finance_dnas"].values():
-            assert len(dna.dimensions) == 6
+            assert len(dna.dimensions) == 15
 
 
 # ---------------------------------------------------------------------------
@@ -126,11 +126,11 @@ class TestFinanceDNAStep:
 
 
 class TestAtlasStep:
-    def test_graph_has_fifteen_nodes(self, pipeline: dict) -> None:  # type: ignore[type-arg]
-        assert len(pipeline["graph"].nodes) == 15
+    def test_graph_has_twenty_one_nodes(self, pipeline: dict) -> None:  # type: ignore[type-arg]
+        assert len(pipeline["graph"].nodes) == 21
 
-    def test_graph_has_eleven_relationships(self, pipeline: dict) -> None:  # type: ignore[type-arg]
-        assert len(pipeline["graph"].relationships) == 11
+    def test_graph_has_nineteen_relationships(self, pipeline: dict) -> None:  # type: ignore[type-arg]
+        assert len(pipeline["graph"].relationships) == 19
 
     def test_apple_finance_dna_attached_to_node(self, pipeline: dict) -> None:  # type: ignore[type-arg]
         graph = pipeline["graph"]
@@ -247,18 +247,19 @@ class TestGoldenExample:
         assert len(artifact.assumptions) >= 1  # What assumptions?
         assert len(artifact.falsifiability_conditions) >= 1  # What changes this?
 
-    def test_both_companies_share_taiwan_exposure(
+    def test_both_companies_qualify_blind_spots(
         self,
         pipeline: dict,  # type: ignore[type-arg]
     ) -> None:
-        """Apple and NVIDIA both depend on TSMC — a shared portfolio Blind Spot."""
+        """Apple and NVIDIA both qualify for Blind Spots through different patterns."""
         apple_bs = pipeline["blind_spots"]["apple-inc"]
         nvidia_bs = pipeline["blind_spots"]["nvidia"]
         assert apple_bs is not None
         assert nvidia_bs is not None
-        # Both conclusions reference Taiwan
+        # Apple: Taiwan supply chain path
         assert "Taiwan" in apple_bs.supporting_reasoning.conclusion
-        assert "Taiwan" in nvidia_bs.supporting_reasoning.conclusion
+        # NVIDIA: export controls path (higher confidence than Taiwan path)
+        assert nvidia_bs.supporting_reasoning.confidence >= 0.75
 
 
 # ---------------------------------------------------------------------------
