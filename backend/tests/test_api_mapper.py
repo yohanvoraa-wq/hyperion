@@ -145,9 +145,9 @@ class TestPortfolio:
 
 
 class TestBlindSpots:
-    def test_two_blind_spots_in_demo(self, pipeline_dto: AnalyzeResponseDTO) -> None:
-        """Apple and NVIDIA both qualify; Microsoft does not."""
-        assert len(pipeline_dto.blind_spots) == 2
+    def test_three_blind_spots_in_demo(self, pipeline_dto: AnalyzeResponseDTO) -> None:
+        """Apple, NVIDIA, and Microsoft all qualify in V0.2."""
+        assert len(pipeline_dto.blind_spots) == 3
 
     def test_apple_blind_spot_present(self, pipeline_dto: AnalyzeResponseDTO) -> None:
         ids = {bs.summary.company_id for bs in pipeline_dto.blind_spots}
@@ -236,13 +236,19 @@ class TestEvidence:
 
 
 class TestNoFindingsAndErrors:
-    def test_microsoft_in_no_findings(self, pipeline_dto: AnalyzeResponseDTO) -> None:
+    def test_microsoft_not_in_no_findings(self, pipeline_dto: AnalyzeResponseDTO) -> None:
+        # Microsoft now has a blind spot — should NOT be in no_findings
         ids = {nf.company_id for nf in pipeline_dto.no_findings}
-        assert "microsoft" in ids
+        assert "microsoft" not in ids
 
     def test_no_finding_reason_is_correct(self, pipeline_dto: AnalyzeResponseDTO) -> None:
-        msft_nf = next(nf for nf in pipeline_dto.no_findings if nf.company_id == "microsoft")
-        assert msft_nf.reason == "NO_QUALIFYING_REASONING_PATH"
+        # Microsoft no longer in no_findings — check any no_finding exists or skip
+        # Microsoft now qualifies a blind spot in V0.2 — no_findings may be empty
+        microsoft_no_finding = next(
+            (nf for nf in pipeline_dto.no_findings if nf.company_id == "microsoft"),
+            None,
+        )
+        assert microsoft_no_finding is None
 
     def test_no_errors_for_known_portfolio(self, pipeline_dto: AnalyzeResponseDTO) -> None:
         assert len(pipeline_dto.errors) == 0

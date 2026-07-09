@@ -126,11 +126,11 @@ class TestFinanceDNAStep:
 
 
 class TestAtlasStep:
-    def test_graph_has_twenty_one_nodes(self, pipeline: dict) -> None:  # type: ignore[type-arg]
-        assert len(pipeline["graph"].nodes) == 21
+    def test_graph_has_twenty_six_nodes(self, pipeline: dict) -> None:  # type: ignore[type-arg]
+        assert len(pipeline["graph"].nodes) == 26
 
-    def test_graph_has_nineteen_relationships(self, pipeline: dict) -> None:  # type: ignore[type-arg]
-        assert len(pipeline["graph"].relationships) == 19
+    def test_graph_has_twenty_six_relationships(self, pipeline: dict) -> None:  # type: ignore[type-arg]
+        assert len(pipeline["graph"].relationships) == 26
 
     def test_apple_finance_dna_attached_to_node(self, pipeline: dict) -> None:  # type: ignore[type-arg]
         graph = pipeline["graph"]
@@ -158,9 +158,9 @@ class TestJanusStep:
     def test_nvidia_produces_reasoning_artifact(self, pipeline: dict) -> None:  # type: ignore[type-arg]
         assert pipeline["artifacts"]["nvidia"] is not None
 
-    def test_microsoft_produces_no_artifact(self, pipeline: dict) -> None:  # type: ignore[type-arg]
-        """Microsoft has no qualifying path in V0.1 — correctly returns None."""
-        assert pipeline["artifacts"]["microsoft"] is None
+    def test_microsoft_produces_an_artifact(self, pipeline: dict) -> None:  # type: ignore[type-arg]
+        """Microsoft now finds Interest Rate Sensitivity path in V0.2 Atlas."""
+        assert pipeline["artifacts"]["microsoft"] is not None
 
     def test_apple_artifact_has_reasoning_steps(self, pipeline: dict) -> None:  # type: ignore[type-arg]
         artifact = pipeline["artifacts"]["apple-inc"]
@@ -180,9 +180,9 @@ class TestTitanStep:
     def test_nvidia_produces_blind_spot(self, pipeline: dict) -> None:  # type: ignore[type-arg]
         assert pipeline["blind_spots"]["nvidia"] is not None
 
-    def test_microsoft_has_no_blind_spot(self, pipeline: dict) -> None:  # type: ignore[type-arg]
-        """No Janus path → no Titan output. Silence is correct."""
-        assert pipeline["blind_spots"]["microsoft"] is None
+    def test_microsoft_qualifies_blind_spot(self, pipeline: dict) -> None:  # type: ignore[type-arg]
+        """Microsoft now qualifies a blind spot via Interest Rate Sensitivity (V0.2)."""
+        assert pipeline["blind_spots"]["microsoft"] is not None
 
     def test_apple_blind_spot_is_qualified(self, pipeline: dict) -> None:  # type: ignore[type-arg]
         bs = pipeline["blind_spots"]["apple-inc"]

@@ -28,7 +28,7 @@ Five test groups:
   Group 5 — End-to-end demo path (real seed data)
     reason("apple-inc", real_graph) produces the exact demo chain.
     reason("nvidia", real_graph) shares the TSMC path.
-    reason("microsoft", real_graph) returns None (no qualifying path).
+    reason("microsoft", real_graph) now returns an artifact via Interest Rate Sensitivity (V0.2).
 """
 
 from __future__ import annotations
@@ -451,12 +451,11 @@ class TestEndToEnd:
             "Janus should produce a ReasoningArtifact for it."
         )
 
-    def test_microsoft_returns_none(self, real_graph: KnowledgeGraph) -> None:
-        """Microsoft has no path to a MACRO_FACTOR in V0.1 seed data."""
+    def test_microsoft_returns_artifact(self, real_graph: KnowledgeGraph) -> None:
+        """Microsoft now finds Interest Rate Sensitivity path in V0.2 Atlas."""
         result = reason("microsoft", real_graph)
-        assert result is None, (
-            "Microsoft has no qualifying path in V0.1 seed data. "
-            "Returning a ReasoningArtifact would be a false positive."
+        assert result is not None, (
+            "Microsoft should find US → Fed Rate path in V0.2 Atlas."
         )
 
     def test_artifact_five_questions_all_answered(self, real_graph: KnowledgeGraph) -> None:

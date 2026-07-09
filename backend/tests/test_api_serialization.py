@@ -208,8 +208,8 @@ class TestGoldenResponse:
             "Microsoft Corporation",
         ]
 
-    def test_golden_two_blind_spots(self, parsed_response: dict) -> None:  # type: ignore[type-arg]
-        assert len(parsed_response["blind_spots"]) == 2
+    def test_golden_three_blind_spots(self, parsed_response: dict) -> None:  # type: ignore[type-arg]
+        assert len(parsed_response["blind_spots"]) == 3
 
     def test_golden_apple_company_id(self, parsed_response: dict) -> None:  # type: ignore[type-arg]
         apple = parsed_response["blind_spots"][0]
@@ -243,14 +243,13 @@ class TestGoldenResponse:
         assert last["target_id"] == "geopolitical-risk-taiwan"
         assert last["relationship_type"] == "affected_by"
 
-    def test_golden_microsoft_in_no_findings(
+    def test_golden_microsoft_not_in_no_findings(
         self,
         parsed_response: dict,  # type: ignore[type-arg]
     ) -> None:
+        # Microsoft now qualifies a blind spot — no_findings is empty for this portfolio
         no_findings = parsed_response["no_findings"]
-        assert len(no_findings) == 1
-        assert no_findings[0]["company_id"] == "microsoft"
-        assert no_findings[0]["reason"] == "NO_QUALIFYING_REASONING_PATH"
+        assert len(no_findings) == 0
 
     def test_golden_no_errors(self, parsed_response: dict) -> None:  # type: ignore[type-arg]
         assert parsed_response["errors"] == []

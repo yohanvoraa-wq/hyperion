@@ -107,8 +107,8 @@ class TestAnalyzeHappyPath:
         assert "metadata" in demo_response
         assert demo_response["metadata"]["hyperion_version"] == "0.1"
 
-    def test_response_has_two_blind_spots(self, demo_response: dict) -> None:  # type: ignore[type-arg]
-        assert len(demo_response["blind_spots"]) == 2
+    def test_response_has_three_blind_spots(self, demo_response: dict) -> None:  # type: ignore[type-arg]
+        assert len(demo_response["blind_spots"]) == 3
 
     def test_apple_in_blind_spots(self, demo_response: dict) -> None:  # type: ignore[type-arg]
         company_ids = {bs["summary"]["company_id"] for bs in demo_response["blind_spots"]}
@@ -118,9 +118,10 @@ class TestAnalyzeHappyPath:
         company_ids = {bs["summary"]["company_id"] for bs in demo_response["blind_spots"]}
         assert "nvidia" in company_ids
 
-    def test_microsoft_in_no_findings(self, demo_response: dict) -> None:  # type: ignore[type-arg]
+    def test_microsoft_not_in_no_findings(self, demo_response: dict) -> None:  # type: ignore[type-arg]
+        # Microsoft now has a blind spot — it should NOT be in no_findings
         ids = {nf["company_id"] for nf in demo_response["no_findings"]}
-        assert "microsoft" in ids
+        assert "microsoft" not in ids
 
     def test_no_errors_for_valid_portfolio(self, demo_response: dict) -> None:  # type: ignore[type-arg]
         assert demo_response["errors"] == []
@@ -246,7 +247,7 @@ class TestContractCompliance:
     ) -> None:
         """The HTTP response must parse into AnalyzeResponseSchema without error."""
         parsed = AnalyzeResponseSchema.model_validate(demo_response)
-        assert len(parsed.blind_spots) == 2
+        assert len(parsed.blind_spots) == 3
 
     def test_categories_are_lowercase(self, demo_response: dict) -> None:  # type: ignore[type-arg]
         for bs in demo_response["blind_spots"]:
