@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from backend.evidence.document import DocumentBuilder, ParsedDocument
 from backend.evidence.enums import (
     CandidateStatus,
     DocumentType,
@@ -37,6 +36,7 @@ from backend.evidence.registry import (
     supported_document_types,
     trust_level,
 )
+from backend.evidence.document import DocumentBuilder, ParsedDocument
 
 __all__ = [
     "CandidateStatus",
@@ -59,12 +59,12 @@ __all__ = [
     "RelationshipCandidate",
     "Section",
     "Source",
-    "DocumentBuilder",
-    "ParsedDocument",
     "SOURCE_REGISTRY",
     "all_sources",
     "find_source",
     "is_trusted",
     "supported_document_types",
     "trust_level",
+    "DocumentBuilder",
+    "ParsedDocument",
 ]
