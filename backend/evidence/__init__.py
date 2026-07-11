@@ -90,3 +90,12 @@ __all__ += [
     "supported_document_types",
     "trust_level",
 ]
+from backend.evidence.document import (
+    DocumentBuilder,
+    ParsedDocument,
+)
+
+__all__ += [
+    "DocumentBuilder",
+    "ParsedDocument",
+]
