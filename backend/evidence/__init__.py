@@ -73,3 +73,20 @@ __all__ = [
     "Section",
     "Source",
 ]
+from backend.evidence.registry import (
+    SOURCE_REGISTRY,
+    all_sources,
+    find_source,
+    is_trusted,
+    supported_document_types,
+    trust_level,
+)
+
+__all__ += [
+    "SOURCE_REGISTRY",
+    "all_sources",
+    "find_source",
+    "is_trusted",
+    "supported_document_types",
+    "trust_level",
+]
