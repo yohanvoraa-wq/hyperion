@@ -1,106 +1,366 @@
 # Hyperion
 
-An explainable financial reasoning platform. See [`docs/01-VISION.md`](docs/01-VISION.md).
+**Every portfolio contains risks the investor never knowingly took on. Hyperion finds them.**
 
-> Hyperion does not help investors make more decisions. Hyperion helps investors make better-informed decisions.
+[![CI](https://github.com/yohanvoraa-wq/hyperion/actions/workflows/ci.yml/badge.svg)](https://github.com/yohanvoraa-wq/hyperion/actions/workflows/ci.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-740%20passing-brightgreen.svg)](#testing)
+[![mypy](https://img.shields.io/badge/mypy-strict-blue.svg)](pyproject.toml)
 
-## Status
+---
 
-**Phase 3 — Implementation. Milestone 1 — Repository Bootstrap.**
+## What Hyperion does
 
-This repository currently does nothing. It is ready to start doing something. No Finance DNA, no Atlas, no Janus, no Titan logic exists yet — only the structure they will live in.
+You hold Apple stock. You know Apple designs iPhones.
 
-## What this is
+You may not know that Apple depends on TSMC as a sole-source supplier for its
+most profitable chips, that TSMC concentrates over 90% of advanced manufacturing
+in Taiwan, and that Taiwan carries persistent geopolitical risk.
 
-Hyperion is built from a fully specified conceptual architecture before any code was written. Read in order:
+That's a **Blind Spot** — a material exposure you hold without having decided to.
 
-| Doc | Question it answers |
-|---|---|
-| `docs/00-CONSTITUTION.md` | Why does Hyperion exist? |
-| `docs/01-VISION.md` | Where is Hyperion going? |
-| `docs/02-FOUNDATIONAL-CONCEPTS.md` | What is Hyperion's vocabulary? |
-| `docs/03-BLIND-SPOT-FRAMEWORK.md` | What is a Blind Spot, and what makes one worth surfacing? |
-| `docs/04-FINANCE-DNA.md` | How is an Asset's identity represented? |
-| `docs/05-ATLAS.md` | How are relationships between Assets represented? |
-| `docs/06-JANUS.md` | How does Hyperion turn knowledge into a justified conclusion? |
-| `docs/07-SYSTEM-ARCHITECTURE.md` | How do these modules wire together into a system? |
-| `docs/architecture/engineering-decisions/` | Why was each engineering choice made? (ADRs ED-001–ED-009) |
-| `docs/research/dimension-candidate-board.md` | How were Finance DNA's dimensions qualified? |
+Hyperion finds these systematically, and shows its work:
 
-## The one engineering promise
+```
+Apple Inc.
+  → DEPENDS_ON_SUPPLIES → Taiwan Semiconductor Manufacturing Company
+  → LOCATED_IN          → Taiwan
+  → AFFECTED_BY         → Taiwan Geopolitical Risk
 
-**Never write code that isn't immediately justified by one of the documents above.**
+Confidence: 0.8075
 
-If you find yourself writing a class and can't name which document introduced the concept it represents, stop. Either the code isn't needed yet, or a document needs to be updated first — not the other way around.
+WHY THIS MATTERS
+  Apple's semiconductor supply chain creates a geographic concentration
+  the investor may not have explicitly accounted for.
+
+EVIDENCE
+  • Apple 10-K FY2024: TSMC identified as sole-source supplier
+  • TSMC Annual Report: >90% of advanced node capacity in Taiwan
+
+WHAT WOULD INVALIDATE THIS
+  • Evidence that Apple has materially diversified chip manufacturing
+  • TSMC establishing significant capacity outside Taiwan
+```
+
+Every conclusion is traceable. Every step cites a source. Nothing is generated
+by a language model.
+
+---
+
+## Why this is different
+
+Most financial AI tools produce fluent text that sounds authoritative. You cannot
+verify how they reached their conclusion, and you cannot tell whether they made
+it up.
+
+Hyperion inverts this:
+
+| | Typical LLM tool | Hyperion |
+|---|---|---|
+| **Reasoning** | Hidden in the model | Explicit graph traversal |
+| **Same input twice** | Different answers | Identical answer, always |
+| **Evidence** | Absent or invented | Cited to source documents |
+| **Uncertainty** | Confident regardless | Confidence scores throughout |
+| **When it doesn't know** | Generates something | Returns silence |
+
+That last row matters most. When Hyperion has no qualifying reasoning path for
+a company, it returns nothing. Microsoft, analyzed against V0.1 data, correctly
+returned no Blind Spot rather than inventing one.
+
+> *"Silence is preferable to weak explanations."* — [Constitution](docs/00-CONSTITUTION.md), Principle 6
+
+---
+
+## Quick start
+
+**Requirements:** Python 3.12+ and [uv](https://docs.astral.sh/uv/)
+
+```bash
+git clone https://github.com/yohanvoraa-wq/hyperion.git
+cd hyperion
+uv sync
+```
+
+**See it reason:**
+
+```bash
+uv run python scripts/demo.py
+```
+
+**Verify every canonical case:**
+
+```bash
+uv run python scripts/run_benchmarks.py
+```
+
+**Inspect the knowledge base:**
+
+```bash
+uv run python scripts/knowledge_report.py
+```
+
+**Start the API:**
+
+```bash
+uv run python scripts/serve.py
+# → http://localhost:8000/docs
+```
+
+---
+
+## Using the API
+
+```bash
+curl -X POST http://localhost:8000/v1/analyze \
+     -H "Content-Type: application/json" \
+     -d '{"portfolio": ["Apple", "NVIDIA", "Nestle"], "as_of": "2024-12-31"}'
+```
+
+```json
+{
+  "metadata": {
+    "hyperion_version": "0.1",
+    "finance_dna_schema": "0.2",
+    "processing_time_ms": 63
+  },
+  "blind_spots": [
+    {
+      "summary": {
+        "company_id": "apple-inc",
+        "company_name": "Apple Inc.",
+        "confidence": 0.8075,
+        "severity": "MEDIUM",
+        "categories": ["dependency", "macroeconomic"]
+      },
+      "explanation": {
+        "steps": [
+          {
+            "premise": "Apple Inc. → DEPENDS_ON_SUPPLIES → TSMC",
+            "inference": "Apple has a supply chain dependency on TSMC.",
+            "relationship_type": "depends_on_supplies",
+            "source_id": "apple-inc",
+            "target_id": "tsmc"
+          }
+        ]
+      },
+      "evidence": {
+        "supporting_evidence": ["Apple 10-K: TSMC sole-source supplier"],
+        "assumptions": ["Finance DNA uses sector-level approximations (V0.1)"],
+        "falsifiability_conditions": ["Evidence of manufacturing diversification"]
+      }
+    }
+  ],
+  "no_findings": [],
+  "errors": []
+}
+```
+
+Every response includes `source_id`, `target_id`, and `relationship_type` for
+every step — enough to render the reasoning chain as an interactive graph without
+any additional API calls.
+
+---
+
+## How it works
+
+Five modules. Five public functions. One direction of data flow.
+
+```
+    Portfolio  ["Apple", "NVIDIA", "Nestle"]
+        │
+        │  load_portfolio()
+        ▼
+    INGESTION ─────────── Resolves names, tickers, aliases → Asset objects
+        │
+        │  evaluate()
+        ▼
+    FINANCE DNA ───────── What kind of company is this?
+        │                 15 dimensions: Capital Intensity, Supply Chain
+        │                 Complexity, Currency Exposure, Energy Dependency,
+        │                 Pricing Power, Customer Concentration...
+        │  build()
+        ▼
+    ATLAS ─────────────── How is it connected to the world?
+        │                 23 nodes, 26 relationships
+        │                 Companies → Suppliers → Geographies → Macro Risks
+        │  reason()
+        ▼
+    JANUS ─────────────── Which path matters?
+        │                 BFS traversal, confidence ≥ 0.5, depth ≤ 4
+        │                 Returns ReasoningArtifact or None
+        │  qualify()
+        ▼
+    TITAN ─────────────── Does this reveal a genuine Blind Spot?
+        │                 Four criteria: meaningful, non-obvious,
+        │                 evidence-supported, changes understanding
+        ▼
+    BlindSpot            Explainable finding with falsifiability conditions
+```
+
+**Architectural rules that never change:**
+
+1. Every module has exactly one public verb
+2. Every artifact is immutable (`frozen=True` or `MappingProxyType`)
+3. No module imports from a downstream module
+4. The engine never imports from the API layer
+5. IDs are permanent and never reused
+
+See [`docs/ENGINE-STABILITY.md`](docs/ENGINE-STABILITY.md) for the formal
+declaration of which modules are architecturally frozen.
+
+---
+
+## What Hyperion can currently reason about
+
+Progress is measured by **reasoning patterns demonstrated**, not by node count.
+Each pattern is validated by an executable benchmark that runs in CI.
+
+| Pattern | Case | Chain | Confidence |
+|---------|------|-------|-----------|
+| ✅ Supply Chain Risk | `apple_taiwan` | Apple → TSMC → Taiwan → Geopolitical Risk | 0.8075 |
+| ✅ Commodity Shock | `nestle_coffee` | Nestlé → Coffee → Brazil → Climate Risk | 0.7268 |
+| ✅ Regulatory Risk | `nvidia_export_controls` | NVIDIA → China → Export Controls | 0.8100 |
+| ✅ Interest Rate Sensitivity | `microsoft_interest_rate` | Microsoft → US → Fed Rate Policy | 0.6800 |
+| ✅ Currency Exposure | `amazon_eu_currency` | Amazon → Europe → EUR/USD Risk | 0.7650 |
+| 🔲 Geopolitical Risk | *planned* | — | — |
+| 🔲 Customer Concentration | *planned* | — | — |
+| 🔲 Supplier Concentration | *planned* | — | — |
+| 🔲 Energy Dependency | *planned* | — | — |
+| 🔲 Labour Exposure | *planned* | — | — |
+
+**Coverage: 5 / 10 canonical patterns.**
+
+Every benchmark is a JSON file specifying the expected company, confidence range,
+and reasoning path. If a knowledge base change breaks Apple's 0.8075 confidence,
+CI fails. See [`benchmarks/`](benchmarks/).
+
+---
 
 ## Repository structure
 
 ```
-backend/
-├── ingestion/    # Portfolio Ingestion Layer        (07 §4, hop 1)
-├── finance_dna/  # Identity Representation           (04)
-├── atlas/        # Relationship Representation       (05)
-├── janus/        # Reasoning                         (06)
-├── titan/        # Blind Spot Qualification          (03 §7 / 07 §5)
-├── output/       # Explainable Output Layer          (07 §4, hop 6)
-├── models/       # Shared, immutable artifact types  (ED-005)
-├── api/          # Empty for V0.1 — see ED-009
-└── tests/
-frontend/         # Empty for V0.1 — see ED-009
-datasets/         # Small, fixed, hand-seeded V0.1 dataset
-scripts/          # demo.py (not yet written) — the first executable goal
-docs/             # Everything above
+hyperion/
+├── backend/
+│   ├── models/          Shared immutable domain objects
+│   ├── ingestion/       Portfolio → Assets
+│   ├── finance_dna/     Asset → FinanceDNA (15 dimensions)
+│   ├── atlas/           Assets + DNA → KnowledgeGraph
+│   ├── janus/           KnowledgeGraph → ReasoningArtifact
+│   ├── titan/           ReasoningArtifact → BlindSpot
+│   ├── evidence/        Evidence Layer (V0.3, in progress)
+│   ├── api/             DTOs, schemas, FastAPI service
+│   └── tests/           740 tests
+├── benchmarks/
+│   └── canonical_cases/ Executable reasoning benchmarks
+├── datasets/
+│   ├── assets.csv              7 companies
+│   ├── atlas/                  Nodes and relationships
+│   └── sources/                Trusted source registry
+├── docs/                Architecture documents (00–12)
+├── knowledge/           Knowledge registry
+├── research/            Canonical reasoning patterns
+└── scripts/
+    ├── demo.py                 Terminal demonstration
+    ├── serve.py                API server
+    ├── run_benchmarks.py       Benchmark suite
+    ├── lint_atlas.py           Knowledge graph integrity
+    └── knowledge_report.py     Knowledge base dashboard
 ```
 
-Every folder maps to exactly one row in `docs/07-SYSTEM-ARCHITECTURE.md` Section 3. No folder exists that doesn't.
+---
 
-## Engineering setup
+## Design philosophy
 
-This project uses `uv` (ED-002). Python 3.12+ (ED-001).
+Hyperion was built document-first. Every architectural decision was frozen in
+writing before any code was written, and every one of thirteen milestones was
+implemented against a design that already existed.
+
+| Document | What it decides |
+|----------|----------------|
+| [`00-CONSTITUTION.md`](docs/00-CONSTITUTION.md) | Ten principles governing every decision |
+| [`03-BLIND-SPOT-FRAMEWORK.md`](docs/03-BLIND-SPOT-FRAMEWORK.md) | What qualifies as a Blind Spot |
+| [`04-FINANCE-DNA.md`](docs/04-FINANCE-DNA.md) | How company identity is represented |
+| [`05-ATLAS.md`](docs/05-ATLAS.md) | Knowledge graph ontology |
+| [`06-JANUS.md`](docs/06-JANUS.md) | Reasoning model and traversal rules |
+| [`09-PUBLIC-INTERFACE.md`](docs/09-PUBLIC-INTERFACE.md) | Frozen API contract |
+| [`11-EVIDENCE-ARCHITECTURE.md`](docs/11-EVIDENCE-ARCHITECTURE.md) | Evidence provenance model |
+| [`ENGINE-STABILITY.md`](docs/ENGINE-STABILITY.md) | Which modules are frozen |
+
+The engine has not changed since v0.1.0-alpha. Every subsequent release added
+knowledge or capability without modifying a single reasoning module.
+
+---
+
+## Testing
 
 ```bash
-uv sync              # install dependencies
-uv run ruff check .  # lint
-uv run ruff format . # format
-uv run mypy backend  # type-check
-uv run pytest        # run tests (none yet)
+uv run pytest              # 740 tests
+uv run mypy backend        # strict type checking, 0 issues
+uv run ruff check backend/ # linting, 0 issues
 ```
 
-## The first executable goal
+The CI pipeline runs all four gates on every push: ruff, mypy `--strict`, pytest,
+and the full benchmark suite.
 
-Not API. Not frontend. Not authentication. A single command:
+---
 
-```bash
-uv run python scripts/demo.py
-```
+## Roadmap
 
-…that prints one Reasoning Chain and one qualified Blind Spot for a fixed three-company portfolio (Apple, NVIDIA, Microsoft), built entirely deterministically — no model, no API call. Per ED-009, that's the literal Definition of Done for the next phase of work. `scripts/demo.py` does not exist yet.
+| Version | Focus | Status |
+|---------|-------|--------|
+| **v0.1.0-alpha** | Deterministic reasoning engine, API, CI | ✅ Released |
+| **v0.2.0-alpha** | Knowledge expansion, 5/10 patterns, benchmarks | ✅ Released |
+| **v0.3** | Evidence Layer — SEC filing ingestion with provenance | 🔨 In progress |
+| v0.4 | Automated knowledge acquisition, LLM explanation layer | Planned |
+| v0.5 | Interactive graph visualization | Planned |
+| v1.0 | 10/10 patterns, thousands of companies | Planned |
 
-## Status
+The V0.3 Evidence Layer is what will let Hyperion learn from primary sources
+rather than hand-curated data. The architecture is complete
+([`docs/11-EVIDENCE-ARCHITECTURE.md`](docs/11-EVIDENCE-ARCHITECTURE.md)) and the
+domain models, source registry, document model, and SEC parser are implemented.
 
-**Phase 1 complete. Phase 2 (Proof of Concept) complete.**
+Full plan: [`ROADMAP.md`](ROADMAP.md)
 
-The full pipeline runs end-to-end:
+---
 
-```bash
-uv run python scripts/demo.py
-```
+## Contributing
 
-See [CHANGELOG.md](CHANGELOG.md) for the complete v0.1.0-alpha release notes.
+The most valuable contributions require no engine knowledge — adding a company
+is one CSV row, adding a relationship is another. Every relationship must cite
+verifiable evidence.
 
-## Milestone roadmap
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for how to add companies, relationships,
+and Finance DNA dimensions.
 
-```
-Milestone 1  ✅  Repository Bootstrap
-Milestone 2  ✅  Shared Models
-Milestone 3  ✅  Portfolio Ingestion
-Milestone 4  ✅  Finance DNA
-Milestone 5  ✅  Atlas Knowledge Graph
-Milestone 6  ✅  Janus Reasoning Engine
-Milestone 7  ✅  Titan Qualification Engine
-Milestone 8  ✅  End-to-End Demo Pipeline
-────────────────────────────────────────
-Milestone 9       Repository Polish (CI, Makefile, CONTRIBUTING)
-Milestone 10      FastAPI
-Milestone 11      Frontend
-```
+---
+
+## Current limitations
+
+Stated plainly, because a system about hidden risks should not hide its own:
+
+- **Finance DNA scores are industry-level approximations.** Company-specific
+  scoring requires automated filing ingestion (V0.4).
+- **The knowledge graph is hand-curated.** 7 companies, 23 nodes, 26
+  relationships. The Evidence Layer will change this.
+- **Janus returns one reasoning path per company.** Multi-path reasoning is
+  planned for V0.4.
+- **Five of ten canonical patterns are demonstrated.** The remaining five are
+  specified but not yet implemented.
+
+---
+
+## License
+
+MIT — see [`LICENSE`](LICENSE).
+
+---
+
+<div align="center">
+
+**Hyperion is a reasoning system, not a chatbot.**
+
+Every conclusion is traceable. Every step cites a source. Every claim can be falsified.
+
+</div>
